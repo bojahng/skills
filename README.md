@@ -1,16 +1,20 @@
-# Codex Skills Collection
+# Agent Skills Collection
 
 [中文](#中文) | [English](#english)
 
 ## 中文
 
-这是一个面向 Codex 的 skills 集合仓库，用来沉淀可复用的工作流、工具脚本和领域知识。每个 skill 都是独立能力，可以通过 Codex plugin marketplace 安装。
+这是一个面向常见 AI Agent 的 skills 集合仓库，用来沉淀可复用的工作流、工具脚本和领域知识。每个 skill 都是独立能力，核心内容遵循通用 `SKILL.md` 结构；同时也提供 Codex plugin marketplace 元数据，方便在 Codex 中一键安装。
 
 当前包含：
 
 | Skill | 用途 |
 | --- | --- |
 | `organize-folders` | 扫描、分析和规划文件夹/磁盘整理方案，生成目录结构、迁移清单、归档规则和维护建议。默认只读扫描，实际移动文件前需要确认。 |
+
+### 支持的 Agent
+
+这个仓库面向支持 `SKILL.md` / Agent Skills 目录结构的工具使用，包括 Codex、Claude 兼容技能环境、Eloquen 等多 Agent 场景，以及支持 GitHub skill 安装的通用 skills CLI。
 
 ### 安装
 
@@ -32,6 +36,12 @@ npx skills add bojahng/skills --skill organize-folders
 
 ```text
 npx skills add https://github.com/bojahng/skills/tree/main/plugins/organize-folders/skills/organize-folders
+```
+
+手动安装：
+
+```text
+复制 plugins/organize-folders/skills/organize-folders 到你的 agent skills 目录。
 ```
 
 ### 使用示例
@@ -62,6 +72,8 @@ npx skills add https://github.com/bojahng/skills/tree/main/plugins/organize-fold
 
 ```text
 codex
+claude
+eloquen
 agent-skills
 skill-md
 claude-skills
@@ -93,13 +105,17 @@ file-organization
 
 ## English
 
-This repository is a collection of Codex skills: reusable workflows, helper scripts, and domain-specific instructions. Each skill is packaged as an installable Codex plugin.
+This repository is a collection of skills for common AI agents: reusable workflows, helper scripts, and domain-specific instructions. Each skill follows the general `SKILL.md` directory pattern, and the repository also includes Codex plugin marketplace metadata for one-click installation in Codex.
 
 Included skills:
 
 | Skill | Purpose |
 | --- | --- |
 | `organize-folders` | Scans, analyzes, and plans folder or drive organization. It can generate directory structures, migration plans, archive rules, and maintenance guidance. It defaults to read-only scanning and requires confirmation before moving files. |
+
+### Supported Agents
+
+This repository is intended for tools that support `SKILL.md` / Agent Skills directory structures, including Codex, Claude-compatible skill environments, Eloquen-style agents, multi-agent setups, and generic skills CLIs that install from GitHub.
 
 ### Installation
 
@@ -121,6 +137,12 @@ If the CLI does not recognize the marketplace repository layout, use the GitHub 
 
 ```text
 npx skills add https://github.com/bojahng/skills/tree/main/plugins/organize-folders/skills/organize-folders
+```
+
+Manual install:
+
+```text
+Copy plugins/organize-folders/skills/organize-folders into your agent skills directory.
 ```
 
 ### Usage Examples
@@ -151,6 +173,8 @@ This repository is designed to be indexed by skills marketplaces, GitHub-based s
 
 ```text
 codex
+claude
+eloquen
 agent-skills
 skill-md
 claude-skills
