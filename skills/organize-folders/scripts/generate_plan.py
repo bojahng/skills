@@ -10,9 +10,6 @@ from pathlib import Path
 from orglib import default_dir_names, load_json, markdown_table, now_iso, safe_filename, write_json
 
 
-DEFAULT_LINK_THRESHOLD_MB = 512
-
-
 def unique_target(target: Path, used: set[str]) -> Path:
     candidate = target
     index = 2
@@ -23,23 +20,10 @@ def unique_target(target: Path, used: set[str]) -> Path:
     return candidate
 
 
-def should_link_in_sandbox(source: Path, threshold_bytes: int) -> bool:
-    """Use links for directories and large files so previews do not duplicate data."""
-    try:
-        if source.is_dir():
-            return True
-        if source.is_file():
-            return source.stat().st_size >= threshold_bytes
-    except OSError:
-        return False
-    return False
-
-
-def build_plan(classifications: dict, target_root: Path, sandbox: bool, link_threshold_mb: int = DEFAULT_LINK_THRESHOLD_MB) -> dict:
+def build_plan(classifications: dict, target_root: Path, sandbox: bool) -> dict:
     base = target_root / "_organized_preview" if sandbox else target_root
     items: list[dict] = []
     used_targets: set[str] = set()
-    link_threshold_bytes = max(0, link_threshold_mb) * 1024 * 1024
 
     if sandbox:
         items.append(
@@ -77,7 +61,7 @@ def build_plan(classifications: dict, target_root: Path, sandbox: bool, link_thr
             action = "manual-review"
             target = str(unique_target(base / suggested_dir / safe_filename(source.name), used_targets))
         else:
-            action = "link" if sandbox and should_link_in_sandbox(source, link_threshold_bytes) else ("copy" if sandbox else "move")
+            action = "copy" if sandbox else "move"
             target_path = unique_target(base / suggested_dir / safe_filename(source.name), used_targets)
             target = str(target_path)
 
@@ -89,7 +73,7 @@ def build_plan(classifications: dict, target_root: Path, sandbox: bool, link_thr
                 "reason": item.get("reason", ""),
                 "risk": item.get("risk", "medium"),
                 "confidence": item.get("confidence", "low"),
-                "requires_confirmation": bool(item.get("requires_confirmation") or action in {"manual-review", "copy", "link"}),
+                "requires_confirmation": bool(item.get("requires_confirmation") or action in {"manual-review", "copy"}),
                 "classification": item,
             }
         )
@@ -99,7 +83,6 @@ def build_plan(classifications: dict, target_root: Path, sandbox: bool, link_thr
         "generated_at": now_iso(),
         "target_root": str(target_root),
         "sandbox": sandbox,
-        "sandbox_link_threshold_mb": link_threshold_mb,
         "items": items,
     }
 
@@ -116,7 +99,6 @@ def to_markdown(plan: dict) -> str:
             f"- 生成时间：`{plan['generated_at']}`",
             f"- 目标根目录：`{plan['target_root']}`",
             f"- 沙盒模式：`{plan['sandbox']}`",
-            f"- 沙盒链接阈值：`{plan.get('sandbox_link_threshold_mb', DEFAULT_LINK_THRESHOLD_MB)} MB`",
             "",
             markdown_table(["动作", "原路径", "目标路径", "风险", "需确认", "原因"], rows),
             "",
@@ -129,13 +111,12 @@ def main() -> None:
     parser.add_argument("--classifications", required=True, help="classify_files.py 生成的 JSON 文件")
     parser.add_argument("--target-root", required=True, help="整理目标根目录")
     parser.add_argument("--sandbox", action="store_true", help="生成沙盒整理计划")
-    parser.add_argument("--link-large-threshold-mb", type=int, default=DEFAULT_LINK_THRESHOLD_MB, help="沙盒模式下大于等于该大小的文件使用链接而不是复制；默认 512")
     parser.add_argument("--format", choices=["json", "markdown"], default="markdown")
     parser.add_argument("--output", help="输出文件")
     args = parser.parse_args()
 
     classifications = load_json(args.classifications)
-    plan = build_plan(classifications, Path(args.target_root).expanduser().resolve(), args.sandbox, args.link_large_threshold_mb)
+    plan = build_plan(classifications, Path(args.target_root).expanduser().resolve(), args.sandbox)
     text = to_markdown(plan) if args.format == "markdown" else json.dumps(plan, ensure_ascii=False, indent=2)
 
     if args.output:
