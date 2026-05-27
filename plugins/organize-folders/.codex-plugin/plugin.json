@@ -1,0 +1,34 @@
+{
+  "name": "organize-folders",
+  "version": "0.1.0",
+  "description": "Folder and drive organization workflows for Codex.",
+  "author": {
+    "name": "bojahng",
+    "url": "https://github.com/bojahng"
+  },
+  "repository": "https://github.com/bojahng/skills",
+  "keywords": [
+    "codex",
+    "skills",
+    "folders",
+    "organization",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Organize Folders",
+    "shortDescription": "Plan safe folder and drive organization.",
+    "longDescription": "Organize Folders helps Codex scan folders and drives, diagnose clutter, design maintainable directory structures, generate migration plans, and document archive rules while defaulting to read-only safety.",
+    "developerName": "bojahng",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Use $organize-folders to organize this folder.",
+      "Scan my Downloads folder and suggest archive paths.",
+      "Create a dry-run migration plan for this drive."
+    ]
+  }
+}
