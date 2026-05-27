@@ -4,7 +4,7 @@
 
 ## 中文
 
-这是一个面向常见 AI Agent 的 skills 集合仓库，用来沉淀可复用的工作流、工具脚本和领域知识。每个 skill 都是独立能力，核心内容遵循通用 `SKILL.md` 结构；同时也提供 Codex plugin marketplace 元数据，方便在 Codex 中一键安装。
+这是一个面向常见 AI Agent 的 skills 集合仓库，用来沉淀可复用的工作流、工具脚本和领域知识。每个 skill 都是独立能力，核心内容遵循通用 `SKILL.md` 结构。
 
 当前包含：
 
@@ -18,14 +18,6 @@
 
 ### 安装
 
-Codex plugin marketplace：
-
-```text
-/plugin marketplace add bojahng/skills
-```
-
-然后在 Codex 插件界面安装 `organize-folders`。安装完成后重启 Codex，让新的 skill 生效。
-
 通用 skills CLI：
 
 ```text
@@ -35,13 +27,13 @@ npx skills add bojahng/skills --skill organize-folders
 如果 CLI 不能识别 marketplace 仓库结构，可以使用 skill 目录的 GitHub 路径：
 
 ```text
-npx skills add https://github.com/bojahng/skills/tree/main/plugins/organize-folders/skills/organize-folders
+npx skills add https://github.com/bojahng/skills/tree/main/skills/organize-folders
 ```
 
 手动安装：
 
 ```text
-复制 plugins/organize-folders/skills/organize-folders 到你的 agent skills 目录。
+复制 skills/organize-folders 到你的 agent skills 目录。
 ```
 
 ### 使用示例
@@ -86,26 +78,19 @@ file-organization
 
 ```text
 .
-├── .agents/
-│   └── plugins/
-│       └── marketplace.json
-├── plugins/
+├── skills/
 │   └── organize-folders/
-│       ├── .codex-plugin/
-│       │   └── plugin.json
-│       └── skills/
-│           └── organize-folders/
-│               ├── SKILL.md
-│               ├── agents/
-│               ├── references/
-│               └── scripts/
+│       ├── SKILL.md
+│       ├── agents/
+│       ├── references/
+│       └── scripts/
 ├── LICENSE
 └── README.md
 ```
 
 ## English
 
-This repository is a collection of skills for common AI agents: reusable workflows, helper scripts, and domain-specific instructions. Each skill follows the general `SKILL.md` directory pattern, and the repository also includes Codex plugin marketplace metadata for one-click installation in Codex.
+This repository is a collection of skills for common AI agents: reusable workflows, helper scripts, and domain-specific instructions. Each skill follows the general `SKILL.md` directory pattern.
 
 Included skills:
 
@@ -119,14 +104,6 @@ This repository is intended for tools that support `SKILL.md` / Agent Skills dir
 
 ### Installation
 
-Codex plugin marketplace:
-
-```text
-/plugin marketplace add bojahng/skills
-```
-
-Then install `organize-folders` from the Codex plugin UI. Restart Codex after installation so the new skill is picked up.
-
 Generic skills CLI:
 
 ```text
@@ -136,13 +113,13 @@ npx skills add bojahng/skills --skill organize-folders
 If the CLI does not recognize the marketplace repository layout, use the GitHub path to the skill directory:
 
 ```text
-npx skills add https://github.com/bojahng/skills/tree/main/plugins/organize-folders/skills/organize-folders
+npx skills add https://github.com/bojahng/skills/tree/main/skills/organize-folders
 ```
 
 Manual install:
 
 ```text
-Copy plugins/organize-folders/skills/organize-folders into your agent skills directory.
+Copy skills/organize-folders into your agent skills directory.
 ```
 
 ### Usage Examples
@@ -187,19 +164,12 @@ file-organization
 
 ```text
 .
-├── .agents/
-│   └── plugins/
-│       └── marketplace.json
-├── plugins/
+├── skills/
 │   └── organize-folders/
-│       ├── .codex-plugin/
-│       │   └── plugin.json
-│       └── skills/
-│           └── organize-folders/
-│               ├── SKILL.md
-│               ├── agents/
-│               ├── references/
-│               └── scripts/
+│       ├── SKILL.md
+│       ├── agents/
+│       ├── references/
+│       └── scripts/
 ├── LICENSE
 └── README.md
 ```
