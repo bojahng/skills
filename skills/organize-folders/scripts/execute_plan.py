@@ -5,7 +5,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
+import subprocess
 from pathlib import Path
 
 from orglib import load_json, now_iso
@@ -14,6 +16,42 @@ from orglib import load_json, now_iso
 def log_line(log_path: Path, entry: dict) -> None:
     with log_path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+
+def create_path_placeholder(source: Path, target: Path, reason: str) -> tuple[str, str]:
+    placeholder = target.with_name(f"{target.name}.pathlink.txt")
+    if placeholder.exists():
+        return "error", "路径占位文件已存在"
+    placeholder.parent.mkdir(parents=True, exist_ok=True)
+    placeholder.write_text(
+        "\n".join(
+            [
+                "This is a sandbox path placeholder.",
+                "It does not contain the original file content.",
+                f"Source: {source}",
+                f"Intended link path: {target}",
+                f"Fallback reason: {reason}",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    return "linked-fallback", f"无法创建原生链接，已生成路径占位：{placeholder}"
+
+
+def create_link(source: Path, target: Path) -> tuple[str, str]:
+    target.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        os.symlink(source, target, target_is_directory=source.is_dir())
+        return "linked", "创建符号链接"
+    except OSError as error:
+        if os.name == "nt" and source.is_dir():
+            try:
+                subprocess.run(["cmd", "/c", "mklink", "/J", str(target), str(source)], check=True, capture_output=True, text=True)
+                return "linked", "创建目录联接"
+            except (OSError, subprocess.CalledProcessError) as junction_error:
+                return create_path_placeholder(source, target, f"symbolic link failed: {error}; junction failed: {junction_error}")
+        return create_path_placeholder(source, target, f"symbolic link failed: {error}")
 
 
 def execute_item(item: dict, apply: bool, include_high_risk: bool) -> tuple[str, str]:
@@ -31,6 +69,16 @@ def execute_item(item: dict, apply: bool, include_high_risk: bool) -> tuple[str,
         if apply:
             target.mkdir(parents=True, exist_ok=True)
         return "created" if apply else "dry-run", "创建目录"
+    if action == "link":
+        if not source or not target:
+            return "error", "缺少原路径或目标路径"
+        if not source.exists():
+            return "error", "原路径不存在"
+        if target.exists():
+            return "error", "目标路径已存在"
+        if apply:
+            return create_link(source, target)
+        return "dry-run", "创建路径链接或路径占位"
     if action in {"move", "rename", "copy", "archive", "backup"}:
         if not source or not target:
             return "error", "缺少原路径或目标路径"

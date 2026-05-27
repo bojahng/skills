@@ -12,7 +12,7 @@ from orglib import is_system_path, load_json, markdown_table, write_json
 
 
 BLOCKED_ACTIONS = {"delete", "overwrite", "clear"}
-EXECUTABLE_ACTIONS = {"create_dir", "create_sandbox", "move", "rename", "copy", "archive", "backup", "skip", "manual-review"}
+EXECUTABLE_ACTIONS = {"create_dir", "create_sandbox", "link", "move", "rename", "copy", "archive", "backup", "skip", "manual-review"}
 
 
 def validate(plan: dict) -> dict:
@@ -40,7 +40,9 @@ def validate(plan: dict) -> dict:
             add("error", "目标路径疑似系统目录")
         if target and str(target).lower() in duplicates:
             add("error", "多个计划项使用相同目标路径")
-        if target and target.exists() and action in {"move", "rename", "copy", "archive", "backup"}:
+        if action == "link" and not item.get("requires_confirmation"):
+            add("warning", "链接项应标记为需要确认，避免误以为已经真实迁移")
+        if target and target.exists() and action in {"link", "move", "rename", "copy", "archive", "backup"}:
             add("error", "目标路径已存在，可能覆盖")
         if item.get("risk") == "high" and not item.get("requires_confirmation"):
             add("warning", "高风险项未标记为需要确认")

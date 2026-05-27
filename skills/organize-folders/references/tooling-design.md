@@ -118,6 +118,7 @@ move-plan.csv
 
 - create_dir
 - create_sandbox
+- link
 - move
 - rename
 - copy
@@ -132,6 +133,7 @@ move-plan.csv
 - 删除只能生成 `delete-candidate`
 - 不生成覆盖型操作
 - 不生成系统目录移动操作
+- 沙盒模式下，大文件和目录优先生成 `link` 动作，避免复制占用大量空间
 
 ## 4. 校验类
 
@@ -186,6 +188,7 @@ move-plan.csv
 
 - create_dir
 - create_sandbox
+- link
 - move
 - rename
 - copy
@@ -207,6 +210,7 @@ move-plan.csv
 - 每项操作都写日志
 - 高风险动作必须显式确认
 - 首次整理优先建议沙盒整理模式，但必须由用户确认
+- `link` 动作只用于沙盒预览或用户明确要求的链接整理；优先创建原生链接，失败时生成路径占位说明，不能自动退化为复制
 
 ## 6. 日志类
 
@@ -363,6 +367,15 @@ Move-Item
 Rename-Item
 Copy-Item
 ```
+
+沙盒链接模式可使用：
+
+```powershell
+New-Item -ItemType SymbolicLink
+cmd /c mklink /J
+```
+
+如果当前环境不允许创建符号链接或目录联接，生成 `.pathlink.txt` 路径占位说明文件，并在日志中标记为 fallback。
 
 高风险或默认禁止：
 
