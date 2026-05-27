@@ -14,13 +14,25 @@
 
 ### 安装
 
-在 Codex 中添加这个 marketplace：
+Codex plugin marketplace：
 
 ```text
 /plugin marketplace add bojahng/skills
 ```
 
 然后在 Codex 插件界面安装 `organize-folders`。安装完成后重启 Codex，让新的 skill 生效。
+
+通用 skills CLI：
+
+```text
+npx skills add bojahng/skills --skill organize-folders
+```
+
+如果 CLI 不能识别 marketplace 仓库结构，可以使用 skill 目录的 GitHub 路径：
+
+```text
+npx skills add https://github.com/bojahng/skills/tree/main/plugins/organize-folders/skills/organize-folders
+```
 
 ### 使用示例
 
@@ -38,10 +50,25 @@
 
 ### 安全原则
 
+- 这个 skill 的核心设计是“先分析，再确认，再执行”。
 - 默认只读扫描，不移动、不删除、不重命名文件。
 - 任何实际改动前都需要 dry-run 和用户确认。
 - 默认禁止删除文件、覆盖文件、清空目录、去重删除和移动系统目录。
 - 首次整理推荐使用沙盒预览模式，确认后再正式迁移。
+
+### 发现与收录
+
+这个仓库适合被 skills marketplace、GitHub 聚合索引和通用 skills CLI 收录。推荐的 GitHub topics：
+
+```text
+codex
+agent-skills
+skill-md
+claude-skills
+ai-agents
+productivity
+file-organization
+```
 
 ### 仓库结构
 
@@ -60,6 +87,7 @@
 │               ├── agents/
 │               ├── references/
 │               └── scripts/
+├── LICENSE
 └── README.md
 ```
 
@@ -75,13 +103,25 @@ Included skills:
 
 ### Installation
 
-Add this marketplace in Codex:
+Codex plugin marketplace:
 
 ```text
 /plugin marketplace add bojahng/skills
 ```
 
 Then install `organize-folders` from the Codex plugin UI. Restart Codex after installation so the new skill is picked up.
+
+Generic skills CLI:
+
+```text
+npx skills add bojahng/skills --skill organize-folders
+```
+
+If the CLI does not recognize the marketplace repository layout, use the GitHub path to the skill directory:
+
+```text
+npx skills add https://github.com/bojahng/skills/tree/main/plugins/organize-folders/skills/organize-folders
+```
 
 ### Usage Examples
 
@@ -99,10 +139,25 @@ Use $organize-folders to generate a migration plan and a new directory guide for
 
 ### Safety Principles
 
+- This skill is designed around "analyze first, confirm next, execute last".
 - Read-only scanning by default: no moving, deleting, or renaming files unless confirmed.
 - Any real change requires a dry run and explicit user confirmation.
 - Deleting files, overwriting files, emptying directories, duplicate deletion, and moving system folders are disabled by default.
 - First-time organization should use a sandbox preview before formal migration.
+
+### Discovery
+
+This repository is designed to be indexed by skills marketplaces, GitHub-based skill catalogs, and generic skills CLIs. Recommended GitHub topics:
+
+```text
+codex
+agent-skills
+skill-md
+claude-skills
+ai-agents
+productivity
+file-organization
+```
 
 ### Repository Layout
 
@@ -121,5 +176,6 @@ Use $organize-folders to generate a migration plan and a new directory guide for
 │               ├── agents/
 │               ├── references/
 │               └── scripts/
+├── LICENSE
 └── README.md
 ```
